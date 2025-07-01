@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../Button';
+import type { Variants } from 'framer-motion';
 
-const containerVariants = {
+const containerVariants:Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,

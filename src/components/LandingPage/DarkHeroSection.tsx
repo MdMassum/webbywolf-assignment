@@ -4,10 +4,15 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import bgImage from '@/../public/images/section_3.png';
 import Button from '../Button';
+import type { Variants } from 'framer-motion';
 
-const textVariants = {
+const textVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
 };
 
 const DarkHeroSection = () => {
