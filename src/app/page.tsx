@@ -27,7 +27,7 @@ export default function Home() {
       <TestimonialSection/>
       <TabSection/>
       <FAQSection/>
-      <SubscribeSection/>
+      <SubscribeSection/> 
     </div>
   );
 }

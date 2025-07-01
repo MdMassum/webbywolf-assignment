@@ -1,13 +1,19 @@
 'use client';
 
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function AppDownloadSection() {
   return (
     <section className="bg-[#f9f9f9] py-20 px-6 md:px-16">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-10">
         {/* Left Content */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
           <p className="text-[#1959AC] font-medium text-xl mb-2">Lorem Ipsum</p>
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
             Lorem Ipsum Dolor <br /> Sit Amet
@@ -33,10 +39,16 @@ export default function AppDownloadSection() {
               height={50}
             />
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Image (Phone in Hand) */}
-        <div className="flex justify-center">
+        {/* Right Image */}
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="flex justify-center"
+        >
           <Image
             src="/images/section6_img.png"
             alt="Phone in hand"
@@ -45,7 +57,7 @@ export default function AppDownloadSection() {
             className="object-contain"
             priority
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );

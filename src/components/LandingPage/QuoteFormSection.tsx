@@ -1,7 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../Button';
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: 'easeOut',
+      when: 'beforeChildren',
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const QuoteFormSection = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +38,9 @@ const QuoteFormSection = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
   };
@@ -44,7 +66,6 @@ const QuoteFormSection = () => {
       return;
     }
 
-    // Simulate submission
     setSuccessMsg('Your quote request has been submitted successfully!');
     setErrorMsg('');
     setFormData({
@@ -59,109 +80,83 @@ const QuoteFormSection = () => {
   };
 
   return (
-    <section className="bg-white py-16 px-4 md:px-8 max-w-5xl mx-auto text-[#222222]">
-      <h2 className="text-2xl md:text-3xl font-bold text-center text-[#222] mb-8">
+    <motion.section
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      className="bg-white py-16 px-4 md:px-8 max-w-5xl mx-auto text-[#222222]"
+    >
+      <motion.h2
+        variants={itemVariants}
+        className="text-2xl md:text-3xl font-bold text-center text-[#222] mb-8"
+      >
         REQUEST A QUOTE
-      </h2>
+      </motion.h2>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Name */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          />
-          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-        </div>
+      <motion.form
+        onSubmit={handleSubmit}
+        variants={containerVariants}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        {[
+          { label: 'Name', name: 'name', type: 'text' },
+          { label: 'E-mail', name: 'email', type: 'email' },
+          { label: 'Phone Number', name: 'phone', type: 'text' },
+        ].map(({ label, name, type }) => (
+          <motion.div key={name} variants={itemVariants}>
+            <label className="text-sm font-medium text-gray-700">{label}</label>
+            <input
+              type={type}
+              name={name}
+              value={(formData as any)[name]}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md p-2 mt-1"
+            />
+            {errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>}
+          </motion.div>
+        ))}
 
-        {/* Email */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">E-mail</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-        </div>
-
-        {/* Phone Number */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">Phone Number</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          />
-        </div>
-
-        {/* Time Frame */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">
-            Time Frame <span className="text-red-500">*</span>
-          </label>
-          <select
-            name="timeFrame"
-            value={formData.timeFrame}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          >
-            <option value="">Choose Time Frame</option>
-            <option value="1 Week">1 Week</option>
-            <option value="1 Month">1 Month</option>
-            <option value="3 Months">3 Months</option>
-          </select>
-          {errors.timeFrame && <p className="text-red-500 text-sm mt-1">{errors.timeFrame}</p>}
-        </div>
-
-        {/* Size */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">
-            Size <span className="text-red-500">*</span>
-          </label>
-          <select
-            name="size"
-            value={formData.size}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          >
-            <option value="">Choose Size</option>
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-          </select>
-          {errors.size && <p className="text-red-500 text-sm mt-1">{errors.size}</p>}
-        </div>
-
-        {/* Quantity */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">
-            Quantity <span className="text-red-500">*</span>
-          </label>
-          <select
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 mt-1"
-          >
-            <option value="">Choose Quantity</option>
-            <option value="10">10</option>
-            <option value="50">50</option>
-            <option value="100+">100+</option>
-          </select>
-          {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity}</p>}
-        </div>
+        {/* Select Dropdowns */}
+        {[
+          {
+            label: 'Time Frame',
+            name: 'timeFrame',
+            options: ['', '1 Week', '1 Month', '3 Months'],
+          },
+          {
+            label: 'Size',
+            name: 'size',
+            options: ['', 'Small', 'Medium', 'Large'],
+          },
+          {
+            label: 'Quantity',
+            name: 'quantity',
+            options: ['', '10', '50', '100+'],
+          },
+        ].map(({ label, name, options }) => (
+          <motion.div key={name} variants={itemVariants}>
+            <label className="text-sm font-medium text-gray-700">
+              {label} <span className="text-red-500">*</span>
+            </label>
+            <select
+              name={name}
+              value={(formData as any)[name]}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md p-2 mt-1"
+            >
+              {options.map((opt, idx) => (
+                <option value={opt} key={idx} disabled={opt === ''}>
+                  {opt === '' ? `Choose ${label}` : opt}
+                </option>
+              ))}
+            </select>
+            {errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>}
+          </motion.div>
+        ))}
 
         {/* Description */}
-        <div className="md:col-span-2">
+        <motion.div className="md:col-span-2" variants={itemVariants}>
           <label className="text-sm font-medium text-gray-700">
             Please Describe Your Project <span className="text-red-500">*</span>
           </label>
@@ -169,17 +164,42 @@ const QuoteFormSection = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Choose a project type"
             rows={5}
             className="w-full border border-gray-300 rounded-md p-2 mt-1"
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-        </div>
+        </motion.div>
 
         {/* Submit */}
-        <div className="md:col-span-2 flex flex-col items-center gap-4">
-          {errorMsg && <p className="text-red-600">{errorMsg}</p>}
-          {successMsg && <p className="text-green-600">{successMsg}</p>}
+        <motion.div
+          className="md:col-span-2 flex flex-col items-center gap-4"
+          variants={itemVariants}
+        >
+          <AnimatePresence>
+            {errorMsg && (
+              <motion.p
+                key="error"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="text-red-600 text-sm"
+              >
+                {errorMsg}
+              </motion.p>
+            )}
+            {successMsg && (
+              <motion.p
+                key="success"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="text-green-600 text-sm"
+              >
+                {successMsg}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
           <p className="text-xs text-gray-600 text-center">
             By submitting this form you agree to our{' '}
             <a href="#" className="text-blue-600 underline">
@@ -191,11 +211,13 @@ const QuoteFormSection = () => {
             </a>
             .
           </p>
-          <Button type="submit">Lorem Ipsum →</Button>
-          
-        </div>
-      </form>
-    </section>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button type="submit">Lorem Ipsum →</Button>
+          </motion.div>
+        </motion.div>
+      </motion.form>
+    </motion.section>
   );
 };
 

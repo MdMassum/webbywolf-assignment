@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const tabs = ['Research', 'Plan', 'Design'];
 
@@ -10,7 +11,13 @@ export default function TabSection() {
   const [activeTab, setActiveTab] = useState('Research');
 
   return (
-    <section className="py-16 px-6">
+    <motion.section
+      className="py-16 px-6"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+    >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* Left Content */}
         <div>
@@ -35,12 +42,24 @@ export default function TabSection() {
             ))}
           </div>
 
-          {/* Description */}
-          <p className="text-gray-600 text-sm md:text-base max-w-md mb-4">
-            Egestas fringilla aliquam leo, habitasse arcu varius lorem elit. Neque pellentesque
-            donec et tellus ac varius tortor, bibendum. Nulla felis ac turpis at amet. Purus
-            malesuada placerat arcu at enim elit in accumsan.
-          </p>
+          {/* Animated Tab Content */}
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={activeTab}
+              className="text-gray-600 text-sm md:text-base max-w-md mb-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              {activeTab === 'Research' &&
+                'Research is the foundation of every successful project. It ensures understanding of market, audience, and competition.'}
+              {activeTab === 'Plan' &&
+                'Planning provides a strategic framework, helping teams define timelines, resources, and goals efficiently.'}
+              {activeTab === 'Design' &&
+                'Design transforms ideas into visual stories and interactive experiences for users.'}
+            </motion.p>
+          </AnimatePresence>
 
           {/* Link */}
           <Link href="#" className="text-blue-600 text-sm font-medium inline-flex items-center gap-1">
@@ -49,7 +68,12 @@ export default function TabSection() {
         </div>
 
         {/* Right Image */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true }}
+        >
           <Image
             src="/images/handshake.png"
             alt="Handshake"
@@ -58,8 +82,8 @@ export default function TabSection() {
             className="rounded-lg object-cover w-full h-auto"
             priority
           />
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
